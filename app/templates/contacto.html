@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{# Formulario de contacto por correo. Responsable: Gerardo #}
+{% block titulo %}Contacto{% endblock %}
+{% block contenido %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h1 class="titulo-rojo">Contacto</h1>
+    <p>¿Tienes dudas sobre los tests o tus resultados? Escríbenos y te responderemos por correo.</p>
+    <form method="post" class="tarjeta formulario-validado" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="nombre">Nombre</label>
+          <input class="form-control" id="nombre" name="nombre" value="{{ datos.nombre }}" maxlength="120" required>
+          <div class="invalid-feedback">Escribe tu nombre.</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="email">Correo electrónico</label>
+          <input class="form-control" id="email" name="email" type="email" value="{{ datos.email }}" maxlength="120" required>
+          <div class="invalid-feedback">Escribe un correo válido.</div>
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="asunto">Asunto</label>
+          <input class="form-control" id="asunto" name="asunto" value="{{ datos.asunto }}" maxlength="150" required>
+          <div class="invalid-feedback">Escribe el asunto.</div>
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="mensaje">Mensaje</label>
+          <textarea class="form-control" id="mensaje" name="mensaje" rows="6" maxlength="2000" required>{{ datos.mensaje }}</textarea>
+          <div class="invalid-feedback">Escribe tu mensaje.</div>
+        </div>
+      </div>
+      <button class="btn btn-rojo mt-3 px-4"><i class="bi bi-send"></i> Enviar</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

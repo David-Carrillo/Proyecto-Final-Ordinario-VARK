@@ -1,0 +1,14 @@
+VIDEO Y AUDIO DEL SITIO  (Responsable: Gerardo)
+================================================
+
+Coloquen aquí los archivos con EXACTAMENTE estos nombres:
+
+  video/presentacion.mp4   Video de 2 a 4 minutos (objetivo del sitio, cómo
+                           contestar los tests, consejos). Se muestra en "Acerca de".
+  audio/bienvenida.mp3     Audio corto de bienvenida (30 a 60 segundos).
+
+Recomendaciones para que pesen poco (optimización):
+  - Video: MP4 (H.264), 1280x720, 30 fps. Ideal menos de 40 MB.
+    Con HandBrake: preset "Fast 720p30". O con ffmpeg:
+    ffmpeg -i original.mov -vf scale=1280:-2 -c:v libx264 -crf 26 -preset veryfast -c:a aac -b:a 128k presentacion.mp4
+  - Audio: MP3 a 128 kbps.

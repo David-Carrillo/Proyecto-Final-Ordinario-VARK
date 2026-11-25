@@ -1,0 +1,13 @@
+{% extends "admin/base_admin.html" %}
+{# Alta / cambio de alumno. Responsable: Gerardo #}
+{% block titulo %}{{ 'Editar' if alumno else 'Nuevo' }} alumno{% endblock %}
+{% block admin %}
+<h1 class="titulo-rojo h3">{{ 'Editar' if alumno else 'Nuevo' }} alumno</h1>
+{% set datos = request.form if request.method == 'POST' else (alumno or {'matricula': '', 'nombre': '', 'carrera': '', 'semestre': '', 'grupo': ''}) %}
+<form method="post" class="formulario-validado" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {% include "parciales/_datos_alumno.html" %}
+  <button class="btn btn-rojo px-4">Guardar</button>
+  <a class="btn btn-outline-secondary" href="{{ url_for('admin.alumnos') }}">Cancelar</a>
+</form>
+{% endblock %}

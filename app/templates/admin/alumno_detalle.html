@@ -1,0 +1,64 @@
+{% extends "admin/base_admin.html" %}
+{# Detalle de un alumno con todos sus resultados. Responsable: Gerardo / Lui #}
+{% block titulo %}{{ alumno.nombre }}{% endblock %}
+{% block admin %}
+<div class="d-flex flex-wrap justify-content-between gap-2 mb-3">
+  <div>
+    <h1 class="titulo-rojo h3 mb-0">{{ alumno.nombre }}</h1>
+    <p class="text-muted mb-0">{{ alumno.matricula }} · {{ alumno.carrera }} · {{ alumno.semestre }}° {{ alumno.grupo }}</p>
+  </div>
+  <div class="d-flex gap-2 align-self-start">
+    <a class="btn btn-outline-secondary" href="{{ url_for('admin.alumno_form', alumno_id=alumno.id) }}"><i class="bi bi-pencil"></i> Editar</a>
+    <a class="btn btn-oscuro" target="_blank" href="{{ url_for('admin.reporte_pdf', ambito='individual', matricula=alumno.matricula) }}"><i class="bi bi-file-earmark-pdf"></i> PDF</a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="tarjeta h-100">
+      <h2 class="h5">Resultados VARK</h2>
+      <table class="table table-sm align-middle">
+        <thead><tr><th>Fecha</th><th>V</th><th>A</th><th>R</th><th>K</th><th>Dominante</th><th></th></tr></thead>
+        <tbody>
+        {% for r in alumno.resultados_vark %}
+          <tr>
+            <td><a href="{{ url_for('instrumentos.resultado_vark', resultado_id=r.id) }}">{{ r.fecha.strftime('%d/%m/%y') }}</a></td>
+            <td>{{ r.visual }}</td><td>{{ r.auditivo }}</td><td>{{ r.lectura }}</td><td>{{ r.kinestesico }}</td>
+            <td><strong>{{ r.estilo_dominante }}</strong></td>
+            <td>
+              <form method="post" action="{{ url_for('admin.resultado_eliminar', tipo='vark', resultado_id=r.id) }}" class="confirmar" data-mensaje="¿Eliminar este resultado?">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-link text-danger p-0" title="Eliminar"><i class="bi bi-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        {% else %}<tr><td colspan="7" class="text-muted">Sin resultados.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="tarjeta h-100">
+      <h2 class="h5">Resultados de personalidad</h2>
+      <table class="table table-sm align-middle">
+        <thead><tr><th>Fecha</th><th>E/I</th><th>S/N</th><th>T/F</th><th>J/P</th><th>Tipo</th><th></th></tr></thead>
+        <tbody>
+        {% for r in alumno.resultados_personalidad %}
+          <tr>
+            <td><a href="{{ url_for('instrumentos.resultado_personalidad', resultado_id=r.id) }}">{{ r.fecha.strftime('%d/%m/%y') }}</a></td>
+            <td>{{ r.e }}/{{ r.i }}</td><td>{{ r.s }}/{{ r.n }}</td><td>{{ r.t }}/{{ r.f }}</td><td>{{ r.j }}/{{ r.p }}</td>
+            <td><strong>{{ r.tipo_codigo }}</strong></td>
+            <td>
+              <form method="post" action="{{ url_for('admin.resultado_eliminar', tipo='personalidad', resultado_id=r.id) }}" class="confirmar" data-mensaje="¿Eliminar este resultado?">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-link text-danger p-0" title="Eliminar"><i class="bi bi-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        {% else %}<tr><td colspan="7" class="text-muted">Sin resultados.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

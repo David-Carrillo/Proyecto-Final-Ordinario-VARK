@@ -1,0 +1,16 @@
+{% extends "admin/base_admin.html" %}
+{# Cambio de un tipo de personalidad. Responsable: Gerardo #}
+{% block titulo %}Editar {{ tipo.codigo }}{% endblock %}
+{% block admin %}
+<h1 class="titulo-rojo h3">Editar tipo {{ tipo.codigo }} <small class="text-muted">· {{ tipo.temperamento }}</small></h1>
+<form method="post" class="tarjeta">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <p class="small text-muted">Escribe un punto por renglón.</p>
+  <label class="form-label" for="peligros">Peligros potenciales</label>
+  <textarea class="form-control mb-3" id="peligros" name="peligros" rows="6" required>{{ request.form.get('peligros', tipo.peligros) }}</textarea>
+  <label class="form-label" for="sugerencias">Sugerencias para el desarrollo</label>
+  <textarea class="form-control mb-3" id="sugerencias" name="sugerencias" rows="5" required>{{ request.form.get('sugerencias', tipo.sugerencias) }}</textarea>
+  <button class="btn btn-rojo px-4">Guardar</button>
+  <a class="btn btn-outline-secondary" href="{{ url_for('admin.tipos') }}">Cancelar</a>
+</form>
+{% endblock %}

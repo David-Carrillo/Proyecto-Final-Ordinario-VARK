@@ -1,0 +1,24 @@
+{% extends "admin/base_admin.html" %}
+{# Mensajes del formulario de contacto. Responsable: Gerardo #}
+{% block titulo %}Mensajes{% endblock %}
+{% block admin %}
+<h1 class="titulo-rojo h3">Mensajes de contacto</h1>
+{% for m in mensajes %}
+<div class="tarjeta mb-3">
+  <div class="d-flex justify-content-between flex-wrap gap-2">
+    <div>
+      <strong>{{ m.asunto }}</strong>
+      <div class="small text-muted">{{ m.nombre }} · <a href="mailto:{{ m.email }}">{{ m.email }}</a> · {{ m.fecha.strftime('%d/%m/%Y %H:%M') }}
+        {% if m.enviado %}<span class="badge text-bg-success">Enviado por correo</span>{% else %}<span class="badge text-bg-secondary">Solo guardado</span>{% endif %}</div>
+    </div>
+    <form method="post" action="{{ url_for('admin.mensaje_eliminar', mensaje_id=m.id) }}" class="confirmar" data-mensaje="¿Eliminar este mensaje?">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+    </form>
+  </div>
+  <p class="mt-2 mb-0 texto-mensaje">{{ m.mensaje }}</p>
+</div>
+{% else %}
+<p class="text-muted">No hay mensajes.</p>
+{% endfor %}
+{% endblock %}

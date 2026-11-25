@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{# Acerca de: video y audio. Responsables: Gerardo (video y audio), Valeria (maquetación) #}
+{% block titulo %}Acerca de{% endblock %}
+{% block contenido %}
+<h1 class="titulo-rojo">Acerca del proyecto</h1>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="ratio ratio-16x9 video-marco">
+      <video controls preload="metadata" poster="{{ url_for('static', filename='img/hero-decoracion.jpg') }}">
+        <source src="{{ url_for('static', filename='media/video/presentacion.mp4') }}" type="video/mp4">
+        Tu navegador no puede reproducir el video.
+      </video>
+    </div>
+    <p class="small text-muted mt-2">Video: objetivo del sitio, cómo contestar los tests y consejos (2 a 4 minutos).</p>
+  </div>
+  <div class="col-lg-5">
+    <h2 class="h4">Objetivo</h2>
+    <p>Ofrecer una herramienta de diagnóstico para reflexionar sobre <em>cómo aprendo más rápido y mejor</em>
+      (modelo VARK) y conocer las preferencias de personalidad según la tipología de Jung y Myers-Briggs.</p>
+    <p>Los profesores pueden consultar los resultados por alumno, por grupo o en total, con gráficas y fichas en PDF,
+      para adaptar sus estrategias de enseñanza.</p>
+
+    <h2 class="h5 mt-4"><i class="bi bi-headphones"></i> Escucha la bienvenida</h2>
+    <audio controls preload="none" class="w-100">
+      <source src="{{ url_for('static', filename='media/audio/bienvenida.mp3') }}" type="audio/mpeg">
+      Tu navegador no puede reproducir el audio.
+    </audio>
+
+    <h2 class="h5 mt-4">Consejos para contestar</h2>
+    <ul>
+      <li>No hay respuestas buenas ni malas: contesta como eres, no como te gustaría ser.</li>
+      <li>En VARK puedes marcar más de una opción o dejar una pregunta en blanco si no aplica.</li>
+      <li>En el test de personalidad reparte 10 puntos entre las dos frases, sin usar el 5.</li>
+    </ul>
+  </div>
+</div>
+
+<h2 class="h4 mt-5">Referencias</h2>
+<ul class="small">
+  <li>Fleming, N. (2006). <em>VARK, A guide to learning styles.</em> Traducción al español: García Nájera, J. R., Universidad Pedagógica de Durango.</li>
+  <li>Pedraza, M. <em>Los estilos de aprendizaje VARK.</em> UIS, Seminario de Orientación.</li>
+  <li>García García, S. <em>Valorando diferencias individuales. Consideraciones sobre la encuesta MBTI.</em> Universidad de La Habana.</li>
+  <li>Muñoz López, T. <em>Test basado en la tipología de Jung y Myers-Briggs.</em></li>
+</ul>
+{% endblock %}
