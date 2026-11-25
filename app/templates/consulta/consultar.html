@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{# Consulta pública de resultados por matrícula. Responsable: Lui #}
+{% block titulo %}Mis resultados{% endblock %}
+{% block contenido %}
+<h1 class="titulo-rojo">Mis resultados</h1>
+<form method="get" class="tarjeta mb-4">
+  <div class="row g-2 align-items-end">
+    <div class="col-sm-8 col-md-6">
+      <label class="form-label" for="matricula">Escribe tu matrícula</label>
+      <input class="form-control" id="matricula" name="matricula" value="{{ matricula }}" required>
+    </div>
+    <div class="col-sm-4 col-md-auto"><button class="btn btn-rojo w-100"><i class="bi bi-search"></i> Buscar</button></div>
+  </div>
+</form>
+
+{% if alumno %}
+<div class="tarjeta">
+  <div class="d-flex flex-wrap justify-content-between gap-2">
+    <div>
+      <h2 class="h4 mb-0">{{ alumno.nombre }}</h2>
+      <p class="text-muted mb-0">{{ alumno.matricula }} · {{ alumno.carrera }} · {{ alumno.semestre }}° {{ alumno.grupo }}</p>
+    </div>
+    <a class="btn btn-oscuro align-self-start" target="_blank" href="{{ url_for('instrumentos.consultar_pdf', matricula=alumno.matricula) }}">
+      <i class="bi bi-file-earmark-pdf"></i> Ficha técnica PDF</a>
+  </div>
+  <div class="row g-3 mt-2">
+    <div class="col-md-6">
+      <h3 class="h6 titulo-rojo">Cuestionario VARK</h3>
+      {% if alumno.resultados_vark %}
+        <ul class="list-group">
+        {% for r in alumno.resultados_vark %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ r.fecha.strftime('%d/%m/%Y %H:%M') }} — <strong>{{ r.descripcion }}</strong></span>
+            <a href="{{ url_for('instrumentos.resultado_vark', resultado_id=r.id) }}">Ver</a>
+          </li>
+        {% endfor %}
+        </ul>
+      {% else %}
+        <p>Aún no lo contestas. <a href="{{ url_for('instrumentos.vark') }}">Hacer test VARK</a></p>
+      {% endif %}
+    </div>
+    <div class="col-md-6">
+      <h3 class="h6 titulo-rojo">Test de personalidad</h3>
+      {% if alumno.resultados_personalidad %}
+        <ul class="list-group">
+        {% for r in alumno.resultados_personalidad %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ r.fecha.strftime('%d/%m/%Y %H:%M') }} — <strong>{{ r.tipo_codigo }}</strong></span>
+            <a href="{{ url_for('instrumentos.resultado_personalidad', resultado_id=r.id) }}">Ver</a>
+          </li>
+        {% endfor %}
+        </ul>
+      {% else %}
+        <p>Aún no lo contestas. <a href="{{ url_for('instrumentos.personalidad') }}">Hacer test de personalidad</a></p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
