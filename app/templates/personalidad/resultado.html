@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{# Resultado individual de personalidad. Responsable: Valeria / Lui #}
+{% block titulo %}Resultado de personalidad{% endblock %}
+{% block contenido %}
+{% set a = resultado.alumno %}
+{% set t = resultado.totales %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+  <div>
+    <h1 class="titulo-rojo mb-0">Tu tipo de personalidad</h1>
+    <p class="text-muted">{{ a.nombre }} · {{ a.matricula }} · {{ a.carrera }} · {{ a.semestre }}° {{ a.grupo }}
+      · {{ resultado.fecha.strftime('%d/%m/%Y') }}</p>
+  </div>
+  <a class="btn btn-oscuro" href="{{ url_for('instrumentos.consultar_pdf', matricula=a.matricula) }}" target="_blank">
+    <i class="bi bi-file-earmark-pdf"></i> Descargar ficha PDF</a>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-4">
+    <div class="tarjeta text-center h-100">
+      <p class="tipo-grande">{{ resultado.tipo_codigo }}</p>
+      <p class="mb-1">Temperamento: <strong>{{ temperamento.nombre }}</strong></p>
+      <p class="small mb-1">Motivador básico: {{ temperamento.motivador }}</p>
+      <p class="small">Evitarles: {{ temperamento.evitar }}</p>
+      <ul class="text-start small mb-0">{% for r in temperamento.rasgos %}<li>{{ r }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="tarjeta">
+      {% for d in [1, 2, 3, 4] %}
+        {% set la, lb, nombre_dim = dimensiones[d] %}
+        {% set pa = (t[la] * 100 / 90)|round(1) %}
+        <p class="small mb-1 mt-2"><strong>{{ nombre_dim }}</strong></p>
+        <div class="d-flex justify-content-between small">
+          <span class="{% if la in resultado.tipo_codigo %}fw-bold titulo-rojo{% endif %}">{{ nombres[la] }} [{{ la }}] {{ t[la] }}</span>
+          <span class="{% if lb in resultado.tipo_codigo %}fw-bold titulo-rojo{% endif %}">{{ t[lb] }} [{{ lb }}] {{ nombres[lb] }}</span>
+        </div>
+        <div class="progress barra-dimension" role="progressbar" aria-label="{{ nombre_dim }}">
+          <div class="progress-bar bg-rojo" style="width: {{ pa }}%"></div>
+          <div class="progress-bar bg-secondary" style="width: {{ 100 - pa }}%"></div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-3">
+  <div class="col-md-6">
+    <div class="tarjeta h-100">
+      <h2 class="h5 titulo-rojo"><i class="bi bi-exclamation-triangle"></i> Peligros potenciales</h2>
+      <ul class="mb-0">{% for p in resultado.tipo.lista_peligros %}<li>{{ p }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="tarjeta h-100">
+      <h2 class="h5 titulo-rojo"><i class="bi bi-lightbulb"></i> Sugerencias para el desarrollo</h2>
+      <ul class="mb-0">{% for s in resultado.tipo.lista_sugerencias %}<li>{{ s }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+</div>
+<p class="mt-4 small text-muted">Recuerda: todos los tipos son igualmente valiosos. El resultado describe preferencias, no capacidades.</p>
+{% endblock %}

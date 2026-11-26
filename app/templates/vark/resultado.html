@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{# Resultado individual VARK. Responsable: Valeria (gráfica) / Lui (datos) #}
+{% block titulo %}Resultado VARK{% endblock %}
+{% block contenido %}
+{% set a = resultado.alumno %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+  <div>
+    <h1 class="titulo-rojo mb-0">Tu estilo de aprendizaje</h1>
+    <p class="text-muted">{{ a.nombre }} · {{ a.matricula }} · {{ a.carrera }} · {{ a.semestre }}° {{ a.grupo }}
+      · {{ resultado.fecha.strftime('%d/%m/%Y') }}</p>
+  </div>
+  <a class="btn btn-oscuro" href="{{ url_for('instrumentos.consultar_pdf', matricula=a.matricula) }}" target="_blank">
+    <i class="bi bi-file-earmark-pdf"></i> Descargar ficha PDF</a>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-5">
+    <div class="tarjeta text-center">
+      <p class="mb-1 text-muted">Estilo dominante</p>
+      <p class="display-6 fw-bold titulo-rojo mb-2">{{ resultado.descripcion }}</p>
+      <table class="table table-sm align-middle mb-0">
+        <thead><tr><th>Estilo</th><th class="text-end">Puntos</th><th class="text-end">%</th></tr></thead>
+        <tbody>
+        {% for letra, nombre in estilos.items() %}
+          <tr {% if letra in resultado.estilo_dominante %}class="fila-destacada"{% endif %}>
+            <td><span class="insignia-vark vark-{{ letra }}">{{ letra }}</span> {{ nombre }}</td>
+            <td class="text-end">{{ resultado.conteo[letra] }}</td>
+            <td class="text-end">{{ porcentajes[letra] }}%</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="tarjeta">
+      <canvas id="grafica-vark" height="230"
+              data-etiquetas='{{ estilos.values()|list|tojson }}'
+              data-valores='{{ [resultado.visual, resultado.auditivo, resultado.lectura, resultado.kinestesico]|tojson }}'></canvas>
+    </div>
+  </div>
+</div>
+
+<h2 class="h4 mt-5">Estrategias de estudio para ti</h2>
+<div class="row g-3">
+  {% for letra in resultado.estilo_dominante %}
+  <div class="col-md-6">
+    <div class="tarjeta h-100">
+      <h3 class="h5"><span class="insignia-vark vark-{{ letra }}">{{ letra }}</span> {{ estilos[letra] }}</h3>
+      <p class="small">{{ descripciones[letra] }}</p>
+      <ul class="mb-0">{% for e in estrategias[letra] %}<li>{{ e }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<p class="mt-4"><a class="btn btn-rojo" href="{{ url_for('instrumentos.personalidad', matricula=a.matricula, nombre=a.nombre, carrera=a.carrera, semestre=a.semestre, grupo=a.grupo) }}">
+  Ahora haz el test de personalidad »</a></p>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/graficas.js') }}"></script>
+<script>Graficas.barras('grafica-vark', 'Puntos por estilo');</script>
+{% endblock %}

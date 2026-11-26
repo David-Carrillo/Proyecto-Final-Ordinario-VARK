@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block titulo %}Error {{ codigo }}{% endblock %}
+{% block contenido %}
+<div class="text-center py-5">
+  <p class="display-1 fw-bold titulo-rojo">{{ codigo }}</p>
+  <p class="lead">{{ mensaje }}</p>
+  <a class="btn btn-rojo" href="{{ url_for('publico.inicio') }}">Volver al inicio</a>
+</div>
+{% endblock %}
