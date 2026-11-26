@@ -1,0 +1,89 @@
+{# Plantilla base. Responsable: Valeria. Diseño basado en Consulting.psd #}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Descubre tu estilo de aprendizaje VARK y tu tipo de personalidad (Jung y Myers-Briggs).">
+  <title>{% block titulo %}Inicio{% endblock %} · Aprendizaje VARK y Test de Personalidad</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+  {% block estilos %}{% endblock %}
+</head>
+<body>
+  <header class="encabezado">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand marca" href="{{ url_for('publico.inicio') }}">
+          VARK <span>y Personalidad</span>
+          <small>¿Cómo aprendo más rápido y mejor?</small>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu"
+                aria-controls="menu" aria-expanded="false" aria-label="Abrir menú">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+          {% set ruta = request.endpoint or '' %}
+          <ul class="navbar-nav ms-auto pestanas">
+            <li class="nav-item"><a class="nav-link {% if ruta == 'publico.inicio' %}active{% endif %}" href="{{ url_for('publico.inicio') }}">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link {% if ruta.startswith('instrumentos.vark') or ruta == 'instrumentos.resultado_vark' %}active{% endif %}" href="{{ url_for('instrumentos.vark') }}">Test VARK</a></li>
+            <li class="nav-item"><a class="nav-link {% if 'personalidad' in ruta or ruta == 'instrumentos.tipos' %}active{% endif %}" href="{{ url_for('instrumentos.personalidad') }}">Personalidad</a></li>
+            <li class="nav-item"><a class="nav-link {% if ruta.startswith('instrumentos.consultar') %}active{% endif %}" href="{{ url_for('instrumentos.consultar') }}">Mis resultados</a></li>
+            <li class="nav-item"><a class="nav-link {% if ruta == 'publico.acerca' %}active{% endif %}" href="{{ url_for('publico.acerca') }}">Acerca de</a></li>
+            <li class="nav-item"><a class="nav-link {% if ruta == 'publico.contacto' %}active{% endif %}" href="{{ url_for('publico.contacto') }}">Contacto</a></li>
+            {% if admin_actual %}
+            <li class="nav-item"><a class="nav-link {% if ruta.startswith('admin.') %}active{% endif %}" href="{{ url_for('admin.panel') }}"><i class="bi bi-shield-lock"></i> Admin</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  {% block hero %}{% endblock %}
+
+  <main class="contenido py-4">
+    <div class="container">
+      {% with mensajes = get_flashed_messages(with_categories=true) %}
+        {% for categoria, mensaje in mensajes %}
+          <div class="alert alert-{{ categoria }} alert-dismissible fade show" role="alert">
+            {{ mensaje }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+          </div>
+        {% endfor %}
+      {% endwith %}
+      {% block contenido %}{% endblock %}
+    </div>
+  </main>
+
+  {% block banda %}{% endblock %}
+
+  <footer class="pie">
+    <div class="container text-center">
+      <nav class="enlaces-pie">
+        <a href="{{ url_for('publico.inicio') }}">Inicio</a>
+        <a href="{{ url_for('instrumentos.vark') }}">Test VARK</a>
+        <a href="{{ url_for('instrumentos.personalidad') }}">Personalidad</a>
+        <a href="{{ url_for('publico.acerca') }}">Acerca de</a>
+        <a href="{{ url_for('publico.contacto') }}">Contacto</a>
+        {% if admin_actual %}
+          <form action="{{ url_for('auth.logout') }}" method="post" class="d-inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-link p-0 enlace-pie">Cerrar sesión</button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}">Administradores</a>
+        {% endif %}
+      </nav>
+      <p class="mb-1"><strong>Aprendizaje VARK y Test de Personalidad</strong> · {{ anio_actual }}. Todos los derechos reservados.</p>
+      <p class="small mb-0">Desarrollado por Gerardo, Lui y Valeria.</p>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/general.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

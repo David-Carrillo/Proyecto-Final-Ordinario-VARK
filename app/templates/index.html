@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{# Página de inicio. Responsable: Valeria #}
+{% block titulo %}Inicio{% endblock %}
+
+{% block hero %}
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 offset-lg-6 py-5">
+        <h1 class="hero-titulo">Descubre cómo aprendes más rápido y mejor, y conoce tu tipo de personalidad.</h1>
+        <div class="d-flex gap-2 flex-wrap mt-4">
+          <a href="{{ url_for('instrumentos.vark') }}" class="btn btn-oscuro">Hacer test VARK</a>
+          <a href="{{ url_for('instrumentos.personalidad') }}" class="btn btn-outline-light">Test de personalidad</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block contenido %}
+<div class="row g-4">
+  <div class="col-lg-5">
+    <h2 class="titulo-rojo">¿Qué es VARK?</h2>
+    <p><strong>VARK</strong> es un instrumento creado por Neil Fleming y Colleen Mills (1992) para conocer por qué
+      sentido prefieres recibir y procesar la información. Son 16 preguntas y puedes elegir más de una respuesta.</p>
+    {% for letra, nombre in estilos.items() %}
+      <p class="mb-2"><span class="insignia-vark vark-{{ letra }}">{{ letra }}</span>
+        <strong>{{ nombre }}:</strong> {{ descripciones[letra] }}</p>
+    {% endfor %}
+    <p class="text-end"><a class="leer-mas" href="{{ url_for('instrumentos.vark') }}">» comenzar test</a></p>
+
+    {% if not admin_actual %}
+    <div class="caja-login mt-4">
+      <h3 class="h5">Acceso administradores</h3>
+      <form method="post" action="{{ url_for('auth.login') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="row g-2 align-items-end">
+          <div class="col-sm-7">
+            <label class="form-label small mb-0" for="login-usuario">Usuario</label>
+            <input class="form-control form-control-sm" id="login-usuario" name="usuario" required>
+            <label class="form-label small mb-0 mt-2" for="login-password">Contraseña</label>
+            <input class="form-control form-control-sm" id="login-password" name="password" type="password" required>
+          </div>
+          <div class="col-sm-5">
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" name="recordar" id="recordar">
+              <label class="form-check-label small" for="recordar">Recordarme</label>
+            </div>
+            <button class="btn btn-rojo btn-sm px-4">Entrar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="col-lg-7">
+    <h2>Test de personalidad</h2>
+    <p>Basado en la tipología de <strong>Carl Gustav Jung</strong> y el indicador <strong>Myers-Briggs (MBTI)</strong>.
+      Repartes 10 puntos entre dos frases en 36 renglones y obtienes uno de los <strong>16 tipos</strong>, con sus
+      peligros potenciales y sugerencias para tu desarrollo.</p>
+    <div class="row g-3 mt-1">
+      {% for clave, t in temperamentos.items() %}
+      <div class="col-sm-6">
+        <div class="tarjeta h-100">
+          <h3 class="h6 titulo-rojo mb-1">{{ t.nombre }} <span class="text-muted">({{ clave }})</span></h3>
+          <p class="small mb-1">{{ t.rasgos[:2]|join(' ') }}</p>
+          <p class="small mb-0"><strong>Motivador:</strong> {{ t.motivador }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="text-end mt-3"><a class="leer-mas" href="{{ url_for('instrumentos.tipos') }}">» ver los 16 tipos</a></p>
+  </div>
+</div>
+{% endblock %}
+
+{% block banda %}
+<section class="banda-gris">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4 columna-banda">
+        <h3 class="h6">1. Contesta</h3>
+        <p class="small mb-0"><strong>Llena tus datos</strong> (matrícula, carrera, semestre y grupo) y responde los cuestionarios desde tu celular o computadora.</p>
+      </div>
+      <div class="col-md-4 columna-banda">
+        <h3 class="h6">2. Conoce tu resultado</h3>
+        <p class="small mb-0"><strong>Al terminar</strong> verás tus gráficas, tu estilo dominante, tu tipo de personalidad y estrategias para estudiar mejor.</p>
+      </div>
+      <div class="col-md-4">
+        <h3 class="h6">3. Descarga tu ficha</h3>
+        <p class="small mb-0"><strong>En «Mis resultados»</strong> puedes consultar con tu matrícula y descargar tu ficha técnica en PDF.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

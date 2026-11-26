@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{# Formulario VARK. Responsable: Valeria (validación con jQuery en js/vark.js) #}
+{% block titulo %}Test VARK{% endblock %}
+{% block contenido %}
+<h1 class="titulo-rojo">Cuestionario VARK</h1>
+<p class="lead">Elige la respuesta que mejor explique tu preferencia. <strong>Puedes marcar más de una</strong>
+  si una sola no encaja con tu percepción, y dejar en blanco la pregunta que no aplique.</p>
+
+<form method="post" id="form-vark" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {% include "parciales/_datos_alumno.html" %}
+
+  <div class="progress mb-3 sticky-progreso" role="progressbar" aria-label="Avance">
+    <div class="progress-bar bg-rojo" id="barra-avance" style="width: 0%">0 / {{ preguntas|length }}</div>
+  </div>
+
+  {% for p in preguntas %}
+  <fieldset class="tarjeta pregunta mb-3" data-numero="{{ p.numero }}">
+    <legend class="h6 mb-3"><span class="numero">{{ p.numero }}</span> {{ p.texto }}</legend>
+    {% for o in p.opciones %}
+    <div class="form-check opcion">
+      <input class="form-check-input" type="checkbox" name="opciones" value="{{ o.id }}"
+             id="op-{{ o.id }}" {% if o.id|string in seleccion %}checked{% endif %}>
+      <label class="form-check-label" for="op-{{ o.id }}"><strong>{{ o.letra }}.</strong> {{ o.texto }}</label>
+    </div>
+    {% endfor %}
+  </fieldset>
+  {% endfor %}
+
+  <div id="error-vark" class="alert alert-danger d-none" role="alert"></div>
+  <button class="btn btn-rojo btn-lg px-5" type="submit">Ver mi resultado</button>
+</form>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/vark.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{# Filtro de búsqueda: individual, grupal o total. Responsable: Valeria / Lui #}
+<form method="get" action="{{ accion }}" class="tarjeta mb-4 filtro-busqueda">
+  <div class="row g-2 align-items-end">
+    <div class="col-md-2">
+      <label class="form-label" for="ambito">Ámbito</label>
+      <select class="form-select" id="ambito" name="ambito">
+        <option value="total" {% if filtro.ambito == 'total' %}selected{% endif %}>Total</option>
+        <option value="grupal" {% if filtro.ambito == 'grupal' %}selected{% endif %}>Grupal</option>
+        <option value="individual" {% if filtro.ambito == 'individual' %}selected{% endif %}>Individual</option>
+      </select>
+    </div>
+    <div class="col-md-2 campo-individual">
+      <label class="form-label" for="f-matricula">Matrícula</label>
+      <input class="form-control" id="f-matricula" name="matricula" value="{{ filtro.matricula }}">
+    </div>
+    <div class="col-md-3 campo-individual">
+      <label class="form-label" for="f-nombre">o nombre</label>
+      <input class="form-control" id="f-nombre" name="nombre" value="{{ filtro.nombre }}">
+    </div>
+    <div class="col-md-3 campo-grupal">
+      <label class="form-label" for="f-carrera">Carrera</label>
+      <input class="form-control" id="f-carrera" name="carrera" list="lista-carreras" value="{{ filtro.carrera }}">
+      <datalist id="lista-carreras">{% for c in filtros.carreras %}<option value="{{ c }}">{% endfor %}</datalist>
+    </div>
+    <div class="col-6 col-md-2 campo-grupal">
+      <label class="form-label" for="f-semestre">Semestre</label>
+      <select class="form-select" id="f-semestre" name="semestre">
+        <option value="">Todos</option>
+        {% for s in filtros.semestres %}<option value="{{ s }}" {% if filtro.semestre == s|string %}selected{% endif %}>{{ s }}°</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-6 col-md-2 campo-grupal">
+      <label class="form-label" for="f-grupo">Grupo</label>
+      <select class="form-select" id="f-grupo" name="grupo">
+        <option value="">Todos</option>
+        {% for g in filtros.grupos %}<option value="{{ g }}" {% if filtro.grupo == g %}selected{% endif %}>{{ g }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-md-auto">
+      <button class="btn btn-rojo w-100"><i class="bi bi-search"></i> Buscar</button>
+    </div>
+  </div>
+</form>

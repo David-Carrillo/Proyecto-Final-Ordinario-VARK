@@ -1,0 +1,48 @@
+{# Datos del alumno que se piden antes de cada test. Responsable: Valeria #}
+<fieldset class="tarjeta mb-4">
+  <legend class="h5 titulo-rojo">Tus datos</legend>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label for="matricula" class="form-label">Matrícula</label>
+      <input type="text" class="form-control" id="matricula" name="matricula" maxlength="20"
+             value="{{ datos.matricula }}" required autocomplete="off">
+    </div>
+    <div class="col-md-8">
+      <label for="nombre" class="form-label">Nombre completo</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" maxlength="120"
+             value="{{ datos.nombre }}" required>
+    </div>
+    {# Carrera: lista desplegable + "Otra" para escribirla (catálogo en app/data/carreras.py) #}
+    {% set es_otra = datos.carrera == opcion_otra or (datos.carrera and datos.carrera not in carreras_disponibles) %}
+    {% set texto_otra = (datos.carrera_otra or '') if datos.carrera == opcion_otra else (datos.carrera if es_otra else '') %}
+    <div class="col-md-6">
+      <label for="carrera" class="form-label">Carrera</label>
+      <select class="form-select" id="carrera" name="carrera" required>
+        <option value="">Elige tu carrera…</option>
+        {% for c in carreras_disponibles %}
+          <option value="{{ c }}" {% if c == datos.carrera %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+        <option value="{{ opcion_otra }}" {% if es_otra %}selected{% endif %}>Otra (escríbela)</option>
+      </select>
+      <div id="campo-carrera-otra" class="mt-2 {% if not es_otra %}d-none{% endif %}">
+        <input type="text" class="form-control" id="carrera_otra" name="carrera_otra" maxlength="100"
+               value="{{ texto_otra }}" placeholder="Escribe el nombre completo de tu carrera">
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <label for="semestre" class="form-label">Semestre</label>
+      <select class="form-select" id="semestre" name="semestre" required>
+        <option value="">Elige…</option>
+        {% for s in range(1, 13) %}
+          <option value="{{ s }}" {% if datos.semestre|string == s|string %}selected{% endif %}>{{ s }}°</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-6 col-md-3">
+      <label for="grupo" class="form-label">Grupo</label>
+      <input type="text" class="form-control text-uppercase" id="grupo" name="grupo" maxlength="20"
+             value="{{ datos.grupo }}" required>
+    </div>
+  </div>
+  <p class="form-text mb-0 mt-2">Si ya contestaste antes con la misma matrícula, tus datos se actualizan y se guarda un nuevo resultado.</p>
+</fieldset>
